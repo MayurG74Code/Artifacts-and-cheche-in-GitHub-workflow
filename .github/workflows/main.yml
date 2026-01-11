@@ -1,0 +1,38 @@
+name: Next JS Build with Caching & Artifacts
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
+      # 2. Setup Node.js with caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: 20.x   # ✅ Latest stable Node version
+          cache: 'npm'         # ✅ Cache dependencies using package-lock.json
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. Build Next.js app
+      - name: Build Next.js App
+        run: npm run build
+
+      # 5. Upload build artifacts
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          name: nextjs-build
+          path: .next/          # ✅ Next.js build output folder
